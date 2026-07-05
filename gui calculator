@@ -1,0 +1,83 @@
+from tkinter import *
+from tkinter import messagebox
+import math
+
+# Create window
+root = Tk()
+root.title("MATHEMATICAL CALCULATOR")
+root.geometry("400x500")
+root.resizable(False, False)
+
+expression = ""
+
+# Display
+entry = Entry(root, font=("Arial", 20), bd=10, relief=RIDGE, justify="right")
+entry.pack(fill=X, padx=10, pady=10)
+
+
+def press(num):
+    global expression
+    expression += str(num)
+    entry.delete(0, END)
+    entry.insert(END, expression)
+
+
+def equal():
+    global expression
+    try:
+        result = str(eval(expression))
+        entry.delete(0, END)
+        entry.insert(END, result)
+        expression = result
+    except:
+        messagebox.showerror("Error", "Invalid Expression")
+        clear()
+
+
+def clear():
+    global expression
+    expression = ""
+    entry.delete(0, END)
+
+
+def square_root():
+    global expression
+    try:
+        result = math.sqrt(float(entry.get()))
+        entry.delete(0, END)
+        entry.insert(END, result)
+        expression = str(result)
+    except:
+        messagebox.showerror("Error", "Invalid Input")
+
+
+def off():
+    root.destroy()
+
+
+buttons = [
+    ('7',1,0),('8',1,1),('9',1,2),('/',1,3),
+    ('4',2,0),('5',2,1),('6',2,2),('*',2,3),
+    ('1',3,0),('2',3,1),('3',3,2),('-',3,3),
+    ('0',4,0),('.',4,1),('^',4,2),('+',4,3),
+]
+
+frame = Frame(root)
+frame.pack()
+
+for (text,row,col) in buttons:
+
+    if text == '^':
+        Button(frame,text=text,width=8,height=3,
+               command=lambda: press("**")).grid(row=row,column=col)
+    else:
+        Button(frame,text=text,width=8,height=3,
+               command=lambda t=text: press(t)).grid(row=row,column=col)
+
+Button(frame,text="√",width=8,height=3,command=square_root).grid(row=5,column=0)
+Button(frame,text="C",width=8,height=3,command=clear).grid(row=5,column=1)
+Button(frame,text="=",width=8,height=3,command=equal).grid(row=5,column=2)
+Button(frame,text="OFF",width=8,height=3,bg="red",fg="white",
+       command=off).grid(row=5,column=3)
+
+root.mainloop()
